@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoanKeeper.Core", "LoanKeeper.Core\LoanKeeper.Core.csproj", "{3A07712E-8593-441B-9412-47FBA4FD8DA6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoanKeeper.Test", "LoanKeeper.Test\LoanKeeper.Test.csproj", "{488573D2-9EEA-4E2B-B285-69D62F6A3A6F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3A07712E-8593-441B-9412-47FBA4FD8DA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A07712E-8593-441B-9412-47FBA4FD8DA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A07712E-8593-441B-9412-47FBA4FD8DA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A07712E-8593-441B-9412-47FBA4FD8DA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{488573D2-9EEA-4E2B-B285-69D62F6A3A6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{488573D2-9EEA-4E2B-B285-69D62F6A3A6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{488573D2-9EEA-4E2B-B285-69D62F6A3A6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{488573D2-9EEA-4E2B-B285-69D62F6A3A6F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
