@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 
 namespace LoanKeeper.Core
 {
@@ -33,80 +30,63 @@ namespace LoanKeeper.Core
 		}
 	}
 
-	public class DataCollector
+	public class LoanController
 	{
-		public void MyCreditTest()
+		public void CalculateEndDate()
 		{
-			decimal startDebt = 27918.65761m;
+			//const decimal startDebt = 27918.65761m;
+			const decimal startDebt = 26913.02m;
+			var startdate = new DateTime(2011, 11, 01);
 
-			decimal annualInterest = 12.7m;
-			int startYear = 2011;
-			int startMonth = 9;
-
-			bool printDetails = true;
-
-			PrintPayPlan(annualInterest, startMonth, startDebt, startYear, 1000, printDetails);
-			PrintPayPlan(annualInterest, startMonth, startDebt, startYear, 1100, printDetails);
-			PrintPayPlan(annualInterest, startMonth, startDebt, startYear, 1200, printDetails);
-			PrintPayPlan(annualInterest, startMonth, startDebt, startYear, 1300, printDetails);
-			PrintPayPlan(annualInterest, startMonth, startDebt, startYear, 1400, printDetails);
-			PrintPayPlan(annualInterest, startMonth, startDebt, startYear, 1500, printDetails);
-			PrintPayPlan(annualInterest, startMonth, startDebt, startYear, 2000, printDetails);
-
+			//CalculateEndDate(startdate, startDebt, 1000);
+			//CalculateEndDate(startdate, startDebt, 1100);
+			//CalculateEndDate(startdate, startDebt, 1200);
+			//CalculateEndDate(startdate, startDebt, 1300);
+			//CalculateEndDate(startdate, startDebt, 1400);
+			//CalculateEndDate(startdate, startDebt, 1500);
+			//CalculateEndDate(startdate, startDebt, 2000);
+			CalculateEndDate(startdate, startDebt, 1500);
+			CalculateEndDate(startdate, startDebt, 1900);
+			CalculateEndDate(startdate, startDebt, 2000);
 		}
 
-		private static void PrintPayPlan(decimal annualInterest, int startMonth, decimal startDebt, int startYear, decimal payMonthly, bool printDetails = false)
+		private static void CalculateEndDate(DateTime startDate, decimal startDebt, decimal payMonthly)
 		{
-			decimal debt = startDebt;
-			int year = startYear;
-			int month = startMonth;
+			const bool printDetails = false;
 
-			if (printDetails)
-			{
-				//Trace.WriteLine("========================================");
-				Trace.WriteLine(string.Format("Pay for month {0}", payMonthly));
-				Trace.WriteLine("========================================");
-			}
+			decimal debt = startDebt;
+
+			Trace.WriteLineIf(printDetails, string.Format("Pay for month {0}", payMonthly));
+			Trace.WriteLineIf(printDetails, "========================================");
+			
 
 			decimal overPay = 0;
 			while (debt > 0)
 			{
-				int daysInMonth = DateTime.DaysInMonth(year, month);
-				DateTime payDate = new DateTime(year, month, 1).AddMonths(1);
+				int daysInMonth = DateTime.DaysInMonth(startDate.Year, startDate.Month);
+				DateTime payDate = startDate.AddMonths(1);
 
-				if (printDetails)
-					Trace.WriteLine(string.Format("Owe for {0:dd MMMM yyyy}: {1:0.00}", payDate, debt));
+				Trace.WriteLineIf(printDetails, string.Format("Owe for {0:dd MMMM yyyy}: {1:0.00}", payDate, debt));
 
-				decimal interest = annualInterest / 360 * daysInMonth;
+				decimal interest = 12.7m / 360 * daysInMonth;
 
 				decimal toPay = debt * interest / 100;
 				overPay += toPay;
 
-				if (printDetails)
-				{
-					Trace.WriteLine(string.Format("Interest of bank for {1} days = {0:0.00}", toPay, daysInMonth));
-					Trace.WriteLine("");
-				}
+				Trace.WriteLineIf(printDetails, string.Format("Interest of bank for {1} days = {0:0.00}", toPay, daysInMonth));
+				Trace.WriteLineIf(printDetails,"");
+				
 				debt = debt - payMonthly + toPay;
 
-				if (month == 12)
-				{
-					month = 1;
-					year++;
-				}
-				else
-					month++;
+				startDate = payDate;
 			}
 
-			//Trace.WriteLine("==============================================");
-			Trace.WriteLine(string.Format("Monthly - [{1:0.00}] \t Overpay - [{2:0.00}] \t End - [{0:yyyy MMMM}]", new DateTime(year, month, 1), payMonthly, overPay));
+			Trace.WriteLine(string.Format("Monthly - [{1:0.00}] \t Overpay - [{2:0.00}] \t End - [{0:yyyy MMMM}]", startDate, payMonthly, overPay));
 
-			if (printDetails)
-				Trace.WriteLine("");
-			//Trace.WriteLine("=============================================================================");
+			Trace.WriteLineIf(printDetails,"");
 		}
 
-		public void VerifyPayments()
+		public void VerifyInterestPayments()
 		{
 			decimal amount = 45100;
 			decimal interest = 0;
@@ -171,11 +151,38 @@ namespace LoanKeeper.Core
 							new Payment {PaymentDate = new DateTime(2011, 06, 15), PayAmount = 600.00m}}},
 						new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2011, 07, 04), Interest = 322.34m, Body = 677.66m}}},
 						new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2011, 08, 01), PayAmount = 1000.00m}}},
-						new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2011, 09, 01), PayAmount = 1200.00m}}},
+						new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2011, 09, 01), PayAmount = 1200.00m},
+							new Payment {PaymentDate = new DateTime(2011, 09, 26), PayAmount = 1000.00m}}},
 
-						new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2011, 10, 03), PayAmount = 1300.00m}}},
-						new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2011, 11, 01), PayAmount = 1300.00m}}},
-						new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2011, 12, 01), PayAmount = 1300.00m}}},
+						new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2011, 10, 03), PayAmount = 300.00m},
+							new Payment {PaymentDate = new DateTime(2011, 10, 11), PayAmount = 1000.00m}}},
+
+						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2011, 11, 01), PayAmount = 1300.00m}}},
+						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2011, 11, 01), PayAmount = 1300.00m}}},
+						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2011, 12, 01), PayAmount = 1300.00m}}},
+
+						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 01, 01), PayAmount = 1300.00m}}},
+						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 02, 01), PayAmount = 1300.00m}}},
+						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 03, 01), PayAmount = 1300.00m}}},
+						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 04, 01), PayAmount = 1300.00m}}},
+						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 05, 01), PayAmount = 1300.00m}}},
+						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 06, 01), PayAmount = 1300.00m}}},
+						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 07, 01), PayAmount = 1300.00m}}},
+						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 08, 01), PayAmount = 1300.00m}}},
+						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 09, 01), PayAmount = 1300.00m}}},
+						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 10, 01), PayAmount = 1300.00m}}},
+						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 11, 01), PayAmount = 1300.00m}}},
+						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 12, 01), PayAmount = 1300.00m}}},
+
+						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2013, 01, 01), PayAmount = 1400.00m}}},
+						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2013, 02, 01), PayAmount = 1400.00m}}},
+						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2013, 03, 01), PayAmount = 1400.00m}}},
+						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2013, 04, 01), PayAmount = 1400.00m}}},
+						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2013, 05, 01), PayAmount = 1400.00m}}},
+						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2013, 06, 01), PayAmount = 1400.00m}}},
+						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2013, 07, 01), PayAmount = 1400.00m}}},
+						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2013, 08, 01), PayAmount = 1400.00m}}},
+						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2013, 09, 01), PayAmount = 1400.00m}}},
 					};
 
 			foreach (var mountlyPayment in payments)
