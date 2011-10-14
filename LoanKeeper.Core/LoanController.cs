@@ -45,6 +45,7 @@ namespace LoanKeeper.Core
 			//CalculateEndDate(startdate, startDebt, 1400);
 			//CalculateEndDate(startdate, startDebt, 1500);
 			//CalculateEndDate(startdate, startDebt, 2000);
+			CalculateEndDate(startdate, startDebt, 1400);
 			CalculateEndDate(startdate, startDebt, 1500);
 			CalculateEndDate(startdate, startDebt, 1900);
 			CalculateEndDate(startdate, startDebt, 2000);
@@ -155,10 +156,12 @@ namespace LoanKeeper.Core
 							new Payment {PaymentDate = new DateTime(2011, 09, 26), PayAmount = 1000.00m}}},
 
 						new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2011, 10, 03), PayAmount = 300.00m},
-							new Payment {PaymentDate = new DateTime(2011, 10, 11), PayAmount = 1000.00m}}},
+							new Payment {PaymentDate = new DateTime(2011, 10, 14), PayAmount = 1000.00m}}},
 
-						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2011, 11, 01), PayAmount = 1300.00m}}},
-						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2011, 11, 01), PayAmount = 1300.00m}}},
+						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2011, 11, 01), PayAmount = 300.00m},
+						//    new Payment {PaymentDate = new DateTime(2011, 11, 10), PayAmount = 1200.00m}}},
+
+						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2011, 12, 01), PayAmount = 300.00m}}},
 						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2011, 12, 01), PayAmount = 1300.00m}}},
 
 						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 01, 01), PayAmount = 1300.00m}}},
