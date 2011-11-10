@@ -35,25 +35,17 @@ namespace LoanKeeper.Core
 		public void CalculateEndDate()
 		{
 			//const decimal startDebt = 27918.65761m;
-			const decimal startDebt = 26913.02m;
-			var startdate = new DateTime(2011, 11, 01);
+			const decimal startDebt = 25913.02m;
+			var startdate = new DateTime(2011, 10, 01);
 
-			//CalculateEndDate(startdate, startDebt, 1000);
-			//CalculateEndDate(startdate, startDebt, 1100);
-			//CalculateEndDate(startdate, startDebt, 1200);
-			//CalculateEndDate(startdate, startDebt, 1300);
-			//CalculateEndDate(startdate, startDebt, 1400);
-			//CalculateEndDate(startdate, startDebt, 1500);
-			//CalculateEndDate(startdate, startDebt, 2000);
-			CalculateEndDate(startdate, startDebt, 1400);
-			CalculateEndDate(startdate, startDebt, 1500);
+			CalculateEndDate(startdate, startDebt, 1800);
 			CalculateEndDate(startdate, startDebt, 1900);
 			CalculateEndDate(startdate, startDebt, 2000);
 		}
 
 		private static void CalculateEndDate(DateTime startDate, decimal startDebt, decimal payMonthly)
 		{
-			const bool printDetails = false;
+			const bool printDetails = true;
 
 			decimal debt = startDebt;
 
@@ -158,8 +150,8 @@ namespace LoanKeeper.Core
 						new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2011, 10, 03), PayAmount = 300.00m},
 							new Payment {PaymentDate = new DateTime(2011, 10, 14), PayAmount = 1000.00m}}},
 
-						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2011, 11, 01), PayAmount = 300.00m},
-						//    new Payment {PaymentDate = new DateTime(2011, 11, 10), PayAmount = 1200.00m}}},
+						new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2011, 11, 10), PayAmount = 300.00m},
+							new Payment {PaymentDate = new DateTime(2011, 11, 14), PayAmount = 0000.00m}}},
 
 						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2011, 12, 01), PayAmount = 300.00m}}},
 						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2011, 12, 01), PayAmount = 1300.00m}}},
