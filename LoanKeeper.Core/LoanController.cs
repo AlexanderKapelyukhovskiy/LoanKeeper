@@ -150,8 +150,8 @@ namespace LoanKeeper.Core
 						new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2011, 10, 03), Interest=293.71m, Body = 6.29m,},
 							new Payment {PaymentDate = new DateTime(2011, 10, 14), PayAmount = 1000.00m}}},
 
-						new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2011, 11, 10), PayAmount = 300.00m},
-							new Payment {PaymentDate = new DateTime(2011, 11, 14), PayAmount = 0000.00m}}},
+						new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2011, 11, 10), Interest = 287.98m, Body = 12.02m},
+							new Payment {PaymentDate = new DateTime(2011, 11, 17), PayAmount = 1100.00m}}},
 
 						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2011, 12, 10), PayAmount = 1800.00m}}},
 
