@@ -34,13 +34,12 @@ namespace LoanKeeper.Core
 	{
 		public void CalculateEndDate()
 		{
-			//const decimal startDebt = 27918.65761m;
-			const decimal startDebt = 25913.02m;
-			var startdate = new DateTime(2011, 10, 01);
+			const decimal startDebt = 22336.02m;
+			var startdate = new DateTime(2012, 02, 01);
 
 			CalculateEndDate(startdate, startDebt, 1800);
-			CalculateEndDate(startdate, startDebt, 1900);
-			CalculateEndDate(startdate, startDebt, 2000);
+			CalculateEndDate(startdate, startDebt, 2400);
+			CalculateEndDate(startdate, startDebt, 3000);
 		}
 
 		private static void CalculateEndDate(DateTime startDate, decimal startDebt, decimal payMonthly)
@@ -157,9 +156,11 @@ namespace LoanKeeper.Core
 							new Payment {PaymentDate = new DateTime(2011, 12, 20), PayAmount = 1100.00m }}},
 
 						new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 01, 04), Interest = 266.31m, Body = 33.69m},
-							new Payment {PaymentDate = new DateTime(2012, 01, 12), PayAmount = 0000.00m}}},
+							new Payment {PaymentDate = new DateTime(2012, 01, 19), PayAmount = 1300.00m}}},
 
-						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 02, 10), PayAmount = 300.00m}}},
+						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 02, 04), Interest = 252.56m, Body = 47.44m},
+						//    new Payment {PaymentDate = new DateTime(2012, 02, 11), PayAmount = 2100.00m}}},
+
 						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 03, 10), PayAmount = 1800.00m}}},
 						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 04, 10), PayAmount = 1800.00m}}},
 						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 05, 10), PayAmount = 1800.00m}}},
