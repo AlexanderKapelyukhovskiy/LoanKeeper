@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace LoanKeeper.Core
@@ -27,6 +28,19 @@ namespace LoanKeeper.Core
 				return _payAmount;
 			}
 			set { _payAmount = value; }
+		}
+
+		public DateTime PaymentDateWithShift
+		{
+			get
+			{
+				DateTime paymentdate = PaymentDate.Date;
+
+				if (HoursShift != 0)
+					paymentdate = paymentdate.AddHours(HoursShift);
+
+				return paymentdate;
+			}
 		}
 	}
 
@@ -80,13 +94,6 @@ namespace LoanKeeper.Core
 
 		public void VerifyInterestPayments()
 		{
-			decimal amount = 45100;
-			decimal interest = 0;
-			decimal allInterest = 0;
-			const decimal interestPerHour = 12.7m / (24 * 360 * 100);
-
-			var beginOfPeriod = new DateTime(2007, 08, 28);
-
 			var payments =
 				new[]
 					{
@@ -180,60 +187,98 @@ namespace LoanKeeper.Core
 						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2013, 03, 10), PayAmount = 1800.00m}}},
 						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2013, 04, 10), PayAmount = 1800.00m}}},
 					};
-			int i = 0;
+
+			const decimal interestPerHour = 12.7m / (24 * 360 * 100);
+
+			const decimal amount = 45100;
+			var beginOfPeriod = new DateTime(2007, 08, 28);
+
+			PrintPayments(amount, interestPerHour, beginOfPeriod, payments);
+		}
+
+		private static void PrintPayments(decimal amount, decimal interestPerHour, DateTime beginOfPeriod, IEnumerable<MountlyPayment> payments)
+		{
+			decimal previousMonthInterest = 0;
+			decimal totalInterest = 0;
+
+			int mi = 0;
+			int pi = 1;
+
 			foreach (var mountlyPayment in payments)
 			{
-				decimal initialInterest = interest;
-
-				Trace.Write(string.Format("{2}\t{0,15:MMMM yyyy}\tamount: {1,8:0.00}", beginOfPeriod, amount, i++));
-
-				decimal nextInterest = 0;
-				decimal tempPaidAmount = 0;
+				//Print header with month title
+				Trace.WriteLine(string.Format("{0}{1,15:MMMM yyyy}\tdebt: {2,8:0.00}", mi++, beginOfPeriod, amount));
+				decimal currentMonthInterest = previousMonthInterest;
+				decimal nextMonthInterest = 0;
+				decimal paidInMonth = 0;
 
 				if (mountlyPayment.Payments != null)
 				{
 					foreach (var payment in mountlyPayment.Payments)
 					{
-						tempPaidAmount += payment.PayAmount;
-						decimal diff;
-						if (payment.Interest != null && Math.Abs(diff = payment.Interest.Value - interest) >= 0.01m)
-							Trace.WriteLine(string.Format("Warning!!! Interest diff is {0} on {1:yyyy MM dd}", diff, payment.PaymentDate));
+						VarifyInterest(previousMonthInterest, payment);
 
-						DateTime tempPaymentDate = payment.PaymentDate.Date;
+						paidInMonth += payment.PayAmount;
 
-						if (payment.HoursShift != 0)
-							tempPaymentDate = tempPaymentDate.AddHours(payment.HoursShift);
+						DateTime dateWithShuft = payment.PaymentDateWithShift;
+						nextMonthInterest += amount*interestPerHour*(decimal) (dateWithShuft - beginOfPeriod).TotalHours;
+						beginOfPeriod = dateWithShuft;
 
-						var hours = (decimal)(tempPaymentDate - beginOfPeriod).TotalHours;
-						nextInterest += amount * interestPerHour * hours;
+						//Print payments rows
+						decimal body = payment.PayAmount - previousMonthInterest;
+						decimal interest = payment.Interest ?? previousMonthInterest;
+						Trace.WriteLine(
+							string.Format(
+								"\t\t\t\t\t\t\t\t\t\t{0} \t {1:dd/MM/yy}\tpaid: {2,7:0.00}\tinterest: {3,6:0.00}\tbody: {4,7:0.00}",
+								pi++, payment.PaymentDate, payment.PayAmount, interest, body > 0 ? body : 0));
 
-						if (payment.PayAmount > interest)
+						if (payment.PayAmount > previousMonthInterest)
 						{
-							amount -= (payment.PayAmount - interest);
-							interest = 0;
+							amount -= body;
+							previousMonthInterest = 0;
 						}
 						else
 						{
-							interest -= payment.PayAmount;
+							previousMonthInterest -= payment.PayAmount;
 						}
-
-						beginOfPeriod = tempPaymentDate;
 					}
 				}
 
-				Trace.WriteLine(string.Format("\tpaid: {1,7:0.00}\tinterest: {2,6:0.00}\tbody: {0,7:0.00}", tempPaidAmount - initialInterest, tempPaidAmount, initialInterest));
+				DateTime nextMonthFirstDay = new DateTime(beginOfPeriod.Year, beginOfPeriod.Month, 1).AddMonths(1);
+				nextMonthInterest += amount*interestPerHour*(decimal) (nextMonthFirstDay - beginOfPeriod).TotalHours;
 
-				DateTime nextFirstDay = new DateTime(beginOfPeriod.Year, beginOfPeriod.Month, 1).AddMonths(1);
-				nextInterest += amount * interestPerHour * (decimal)(nextFirstDay - beginOfPeriod).TotalHours;
+				previousMonthInterest = nextMonthInterest;//Math.Round(nextMonthInterest, 2);
+				totalInterest += previousMonthInterest;
+				beginOfPeriod = nextMonthFirstDay;
 
-				interest = Math.Round(nextInterest, 2);
-				allInterest += interest;
-				beginOfPeriod = nextFirstDay;
+				if (mountlyPayment.Payments != null && mountlyPayment.Payments.Length > 1)
+				{
+					Trace.WriteLine("\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t   ---------------------");
+
+					Trace.WriteLine(
+						string.Format(
+							"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t   total body: {0,7:0.00}",
+							paidInMonth - currentMonthInterest));
+
+					Trace.WriteLine(
+						string.Format(
+							"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t   total paid: {0,7:0.00}",
+							paidInMonth));
+				}
+
+
+				Trace.WriteLine("".PadLeft(120, '-'));
 			}
 
 			Trace.WriteLine("");
-			Trace.WriteLine(string.Format("Amount: {0:0.00}\tAll interest: {1:0.00}", amount, allInterest));
+			Trace.WriteLine(string.Format("Debt: {0:0.00}\tAlready paid interest: {1:0.00}", amount, totalInterest));
+		}
 
+		private static void VarifyInterest(decimal interest, Payment payment)
+		{
+			decimal diff;
+			if (payment.Interest != null && Math.Abs(diff = payment.Interest.Value - interest) >= 0.01m)
+				Trace.WriteLine(string.Format("Warning!!! Interest diff is {0} on {1:yyyy MM dd}", diff, payment.PaymentDate));
 		}
 	}
 }
