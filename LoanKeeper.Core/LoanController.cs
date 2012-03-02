@@ -158,12 +158,13 @@ namespace LoanKeeper.Core
 						new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 01, 04), Interest = 266.31m, Body = 33.69m},
 							new Payment {PaymentDate = new DateTime(2012, 01, 19), PayAmount = 1300.00m}}},
 
-						new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 02, 08), Interest = 252.56m, Body = 47.44m},
+						new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 02, 08), Interest = 252.56m, Body = 47.44m, HoursShift = 2},
 							new Payment {PaymentDate = new DateTime(2012, 02, 17), PayAmount = 1600.00m}}},
 
-						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 03, 01), Interest = 220.80m, Body = 79.20m},
-							//new Payment {PaymentDate = new DateTime(2012, 03, 17), PayAmount = 0000.00m}}},
-						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 04, 10), PayAmount = 1800.00m}}},
+						new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 03, 02), Interest = 220.81m, Body = 79.19m},
+							new Payment {PaymentDate = new DateTime(2012, 03, 14), PayAmount = 0000.00m}}},
+
+						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 04, 10), PayAmount = 300.00m}}},
 						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 05, 10), PayAmount = 1800.00m}}},
 						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 06, 10), PayAmount = 1800.00m}}},
 						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 07, 10), PayAmount = 1800.00m}}},
@@ -178,14 +179,13 @@ namespace LoanKeeper.Core
 						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2013, 02, 10), PayAmount = 1800.00m}}},
 						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2013, 03, 10), PayAmount = 1800.00m}}},
 						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2013, 04, 10), PayAmount = 1800.00m}}},
-					
 					};
-
+			int i = 0;
 			foreach (var mountlyPayment in payments)
 			{
 				decimal initialInterest = interest;
 
-				Trace.Write(string.Format("{0,15:MMMM yyyy}\tamount: {1,8:0.00}", beginOfPeriod, amount));
+				Trace.Write(string.Format("{2}\t{0,15:MMMM yyyy}\tamount: {1,8:0.00}", beginOfPeriod, amount, i++));
 
 				decimal nextInterest = 0;
 				decimal tempPaidAmount = 0;
