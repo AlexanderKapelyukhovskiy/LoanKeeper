@@ -198,6 +198,7 @@ namespace LoanKeeper.Core
 
 		private static void PrintPayments(decimal amount, decimal interestPerHour, DateTime beginOfPeriod, IEnumerable<MountlyPayment> payments)
 		{
+			decimal debt = amount;
 			decimal previousMonthInterest = 0;
 			decimal totalInterest = 0;
 
@@ -247,7 +248,7 @@ namespace LoanKeeper.Core
 				DateTime nextMonthFirstDay = new DateTime(beginOfPeriod.Year, beginOfPeriod.Month, 1).AddMonths(1);
 				nextMonthInterest += amount*interestPerHour*(decimal) (nextMonthFirstDay - beginOfPeriod).TotalHours;
 
-				previousMonthInterest = nextMonthInterest;//Math.Round(nextMonthInterest, 2);
+				previousMonthInterest = nextMonthInterest; //Math.Round(nextMonthInterest, 2);
 				totalInterest += previousMonthInterest;
 				beginOfPeriod = nextMonthFirstDay;
 
@@ -271,7 +272,11 @@ namespace LoanKeeper.Core
 			}
 
 			Trace.WriteLine("");
-			Trace.WriteLine(string.Format("Debt: {0:0.00}\tAlready paid interest: {1:0.00}", amount, totalInterest));
+			decimal totalPaid = debt - amount;
+			decimal price = totalPaid + amount + totalInterest;
+			Trace.WriteLine(string.Format(
+				"Debt: {0:0.00}\t Paid: {1:0.00}\tAlready paid interest: {2:0.00}\t Price: {3:0.00}",
+				amount, totalPaid, totalInterest, price));
 		}
 
 		private static void VarifyInterest(decimal interest, Payment payment)
