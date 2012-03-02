@@ -274,9 +274,10 @@ namespace LoanKeeper.Core
 			Trace.WriteLine("");
 			decimal totalPaid = debt - amount;
 			decimal price = totalPaid + amount + totalInterest;
+			decimal rate = (price * 100) / debt;
 			Trace.WriteLine(string.Format(
-				"Debt: {0:0.00}\t Paid: {1:0.00}\tAlready paid interest: {2:0.00}\t Price: {3:0.00}",
-				amount, totalPaid, totalInterest, price));
+				"Debt: {0:0.00}\t Paid: {1:0.00}\tPaid interest: {2:0.00}\t Price: {3:0.00} \tRate: {4:0.00}%",
+				amount, totalPaid, totalInterest, price, rate));
 		}
 
 		private static void VarifyInterest(decimal interest, Payment payment)
