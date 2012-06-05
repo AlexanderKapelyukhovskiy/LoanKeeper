@@ -14,6 +14,13 @@ namespace LoanKeeper.Test
 		}
 
 		[Test]
+		public void VerifyWithoutInvestTest()
+		{
+			var collector = new LoanController();
+			collector.VerifyInterestPayments(true);
+		}
+
+		[Test]
 		public void CalculateTest()
 		{
 			var collector = new LoanController();

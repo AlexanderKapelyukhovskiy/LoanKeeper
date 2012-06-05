@@ -17,6 +17,8 @@ namespace LoanKeeper.Core
 		public decimal? Body { get; set; }
 		public decimal? Interest { get; set; }
 
+		public decimal Invest { get; set; }
+
 		private decimal _payAmount;
 		public decimal PayAmount
 		{
@@ -52,7 +54,7 @@ namespace LoanKeeper.Core
 			var startdate = new DateTime(2012, 05, 07);
 
 			CalculateEndDate(startdate, startDebt, 1800);
-			CalculateEndDate(startdate, startDebt, 2000);
+			CalculateEndDate(startdate, startDebt, 2300);
 			CalculateEndDate(startdate, startDebt, 2400);
 			CalculateEndDate(startdate, startDebt, 3000);
 		}
@@ -93,7 +95,7 @@ namespace LoanKeeper.Core
 			Trace.WriteLineIf(printDetails,"");
 		}
 
-		public void VerifyInterestPayments()
+		public void VerifyInterestPayments(bool withoutInvest = false)
 		{
 			var payments =
 				new[]
@@ -178,18 +180,20 @@ namespace LoanKeeper.Core
 						new MonthlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 05, 04), Interest = 194.01m, Body = 105.99m},
 							new Payment {PaymentDate = new DateTime(2012, 05, 07), PayAmount = 2000.00m}}},
 
-						//new MonthlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 06, 10), PayAmount = 200.00m}}},
-						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 07, 10), PayAmount = 1800.00m}}},
-						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 08, 10), PayAmount = 1800.00m}}},
-						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 09, 10), PayAmount = 1800.00m}}},
+						new MonthlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 06, 08), Interest = 177.33m, Body = 322.67m, Invest = 500},
+						}},//14994.74
 
-						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 10, 10), PayAmount = 1800.00m}}},
-						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 11, 10), PayAmount = 1800.00m}}},
-						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 12, 10), PayAmount = 1800.00m}}},
+						new MonthlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 07, 10), PayAmount = 1800.00m, Invest= 500}}},
+						new MonthlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 08, 10), PayAmount = 1800.00m, Invest= 500}}},
+						new MonthlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 09, 10), PayAmount = 1800.00m, Invest= 500}}},
 
-						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2013, 01, 10), PayAmount = 1800.00m}}},
-						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2013, 02, 10), PayAmount = 1800.00m}}},
-						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2013, 03, 10), PayAmount = 1800.00m}}},
+						new MonthlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 10, 10), PayAmount = 1800.00m, Invest= 500}}},
+						new MonthlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 11, 10), PayAmount = 1800.00m, Invest= 500}}},
+						new MonthlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2012, 12, 10), PayAmount = 1800.00m, Invest= 500}}},
+
+						new MonthlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2013, 01, 10), PayAmount = 1800.00m, Invest= 500}}},
+						new MonthlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2013, 02, 10), PayAmount = 1800.00m, Invest= 500}}},
+						new MonthlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2013, 03, 10), PayAmount = 1800.00m, Invest= 500}}},
 						//new MountlyPayment {Payments = new[] {new Payment {PaymentDate = new DateTime(2013, 04, 10), PayAmount = 1800.00m}}},
 					};
 
@@ -198,20 +202,49 @@ namespace LoanKeeper.Core
 			const decimal amount = 45100;
 			var beginOfPeriod = new DateTime(2007, 08, 28);
 
-			PrintPayments(amount, interestPerHour, beginOfPeriod, payments);
+			PrintPayments(amount, interestPerHour, beginOfPeriod, payments, withoutInvest);
 		}
 
-		private static void PrintPayments(decimal amount, decimal interestPerHour, DateTime beginOfPeriod, IEnumerable<MonthlyPayment> payments)
+		private static void PrintPayments(decimal amount, decimal interestPerHour, DateTime beginOfPeriod, IEnumerable<MonthlyPayment> payments, bool withoutInvest = false)
 		{
 			decimal debt = amount;
 			decimal previousMonthInterest = 0;
 			decimal totalInterest = 0;
+			decimal totalInvest = 0;
 
 			int mi = 0;
 			int pi = 1;
+			DateTime today = DateTime.Today;
+			var nextMonth = new DateTime(today.Year, today.Month, 1);
+			bool futurePrinted = false;
 
 			foreach (var mountlyPayment in payments)
 			{
+				if (amount<0)
+					break;
+
+				if (beginOfPeriod > nextMonth && futurePrinted == false)
+				{
+					decimal totalPaid1 = debt - amount;
+					decimal price1 = totalPaid1 + amount + totalInterest;
+
+					Trace.WriteLine("");
+					Trace.WriteLine("");
+					Trace.WriteLine("".PadRight(120, '-'));
+					Trace.WriteLine("CURRENT DEBT:");
+					Trace.WriteLine(string.Format(
+						"Debt: {0:0.00}\t Paid: {1:0.00}\tPaid interest: {2:0.00}\t Price: {3:0.00}",
+							amount, totalPaid1, totalInterest, price1));
+
+					if (withoutInvest == false)
+						Trace.WriteLine(string.Format("Invest: {0:00}", totalInvest));
+
+					Trace.WriteLine("".PadRight(120, '-'));
+					Trace.WriteLine("");
+					Trace.WriteLine("");
+					futurePrinted = true;
+				}
+
 				//Print header with month title
 				Trace.WriteLine(string.Format("{0}{1,15:MMMM yyyy}\tdebt: {2,8:0.00}", mi++, beginOfPeriod, amount));
 				decimal currentMonthInterest = previousMonthInterest;
@@ -220,32 +253,39 @@ namespace LoanKeeper.Core
 
 				if (mountlyPayment.Payments != null)
 				{
+					
 					foreach (var payment in mountlyPayment.Payments)
 					{
+
+						totalInvest += payment.Invest;
+
 						VarifyInterest(previousMonthInterest, payment);
 
-						paidInMonth += payment.PayAmount;
+						decimal payAmount = payment.PayAmount + (withoutInvest ? 0 : payment.Invest);
+
+						paidInMonth += payAmount;
 
 						DateTime dateWithShuft = payment.PaymentDateWithShift;
 						nextMonthInterest += amount*interestPerHour*(decimal) (dateWithShuft - beginOfPeriod).TotalHours;
 						beginOfPeriod = dateWithShuft;
 
 						//Print payments rows
-						decimal body = payment.PayAmount - previousMonthInterest;
+						decimal body = payAmount - previousMonthInterest;
 						decimal interest = payment.Interest ?? previousMonthInterest;
 						Trace.WriteLine(
 							string.Format(
-								"\t\t\t\t\t\t\t\t\t\t{0} \t {1:dd/MM/yy}\tpaid: {2,7:0.00}\tinterest: {3,6:0.00}\tbody: {4,7:0.00}",
-								pi++, payment.PaymentDate, payment.PayAmount, interest, body > 0 ? body : 0));
+								"\t\t\t\t\t\t\t\t\t\t{0} \t {1:dd/MM/yy}\tpaid: {2,7:0.00}\tinterest: {3,6:0.00}\tbody: {4,7:0.00} {5}",
+								pi++, payment.PaymentDate, payAmount, interest, body > 0 ? body : 0,
+								payment.Invest > 0 && withoutInvest == false ? string.Format("invest: {0:0.00}", payment.Invest) : ""));
 
-						if (payment.PayAmount > previousMonthInterest)
+						if (payAmount > previousMonthInterest)
 						{
 							amount -= body;
 							previousMonthInterest = 0;
 						}
 						else
 						{
-							previousMonthInterest -= payment.PayAmount;
+							previousMonthInterest -= payAmount;
 						}
 					}
 				}
@@ -284,6 +324,9 @@ namespace LoanKeeper.Core
 			Trace.WriteLine(string.Format(
 				"Debt: {0:0.00}\t Paid: {1:0.00}\tPaid interest: {2:0.00}\t Price: {3:0.00} \tRate: {4:0.00}% \tRate2: {5:0.00}%",
 				amount, totalPaid, totalInterest, price, rate, rate2));
+
+			if(withoutInvest == false)
+				Trace.WriteLine(string.Format("Invest: {0:00}", totalInvest));
 		}
 
 		private static void VarifyInterest(decimal interest, Payment payment)
