@@ -1,8 +1,8 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.Diagnostics;
+
 using NUnit.Framework;
 using LoanKeeper.Core;
-using System;
-using System.Diagnostics;
 
 namespace LoanKeeper.Test
 {
@@ -101,26 +101,26 @@ namespace LoanKeeper.Test
 						new Payment {PaymentDate = new DateTime(2012, 01, 04), Interest = 266.31m, Body = 33.69m},
 						new Payment {PaymentDate = new DateTime(2012, 01, 19),		PayAmount = 1300.00m},
 						new Payment {PaymentDate = new DateTime(2012, 02, 08), Interest = 252.56m, Body = 47.44m, HoursShift = 2},
-						new Payment {PaymentDate = new DateTime(2012, 02, 17), PayAmount = 1600.00m},
+						new Payment {PaymentDate = new DateTime(2012, 02, 17),		PayAmount = 1600.00m},
 						new Payment {PaymentDate = new DateTime(2012, 03, 02), Interest = 220.81m, Body = 79.19m},
-						new Payment {PaymentDate = new DateTime(2012, 03, 15), PayAmount = 1900.00m},
+						new Payment {PaymentDate = new DateTime(2012, 03, 15),		PayAmount = 1900.00m},
 						new Payment {PaymentDate = new DateTime(2012, 04, 05), Interest = 214.02m, Body = 85.98m},
-						new Payment {PaymentDate = new DateTime(2012, 04, 18), PayAmount = 700.00m},
+						new Payment {PaymentDate = new DateTime(2012, 04, 18),		PayAmount = 700.00m},
 						new Payment {PaymentDate = new DateTime(2012, 05, 04), Interest = 194.01m, Body = 105.99m},
-						new Payment {PaymentDate = new DateTime(2012, 05, 07), PayAmount = 2000.00m},
+						new Payment {PaymentDate = new DateTime(2012, 05, 07),		PayAmount = 2000.00m},
 						new Payment {PaymentDate = new DateTime(2012, 06, 08), Interest = 177.33m, Body = 330.77m, InvestGrn = 5000m, Rate = 8.105m},
 
-						new Payment {PaymentDate = new DateTime(2012, 07, 10), PayAmount = 1800.00m, Invest= 500},
-						new Payment {PaymentDate = new DateTime(2012, 08, 10), PayAmount = 1800.00m, Invest= 500},
-						new Payment {PaymentDate = new DateTime(2012, 09, 10), PayAmount = 1800.00m, Invest= 500},
+						new Payment {PaymentDate = new DateTime(2012, 07, 10), PayAmount = 2200.00m, InvestGrn = 0000m, Rate = 8},
+						new Payment {PaymentDate = new DateTime(2012, 08, 10), PayAmount = 2200.00m, InvestGrn = 3000m, Rate = 8},
+						new Payment {PaymentDate = new DateTime(2012, 09, 10), PayAmount = 2200.00m, InvestGrn = 3500m, Rate = 8},
 						
-						new Payment {PaymentDate = new DateTime(2012, 10, 10), PayAmount = 1800.00m, Invest= 500},
-						new Payment {PaymentDate = new DateTime(2012, 11, 10), PayAmount = 1800.00m, Invest= 500},
-						new Payment {PaymentDate = new DateTime(2012, 12, 10), PayAmount = 1800.00m, Invest= 500},
+						new Payment {PaymentDate = new DateTime(2012, 10, 10), PayAmount = 2200.00m, InvestGrn = 4000m, Rate = 8},
+						new Payment {PaymentDate = new DateTime(2012, 11, 10), PayAmount = 2200.00m, InvestGrn = 4000m, Rate = 8},
+						new Payment {PaymentDate = new DateTime(2012, 12, 10), PayAmount = 2200.00m, InvestGrn = 4000m, Rate = 8},
 						
-						new Payment {PaymentDate = new DateTime(2013, 01, 10), PayAmount = 2000.00m, Invest= 500},
-						new Payment {PaymentDate = new DateTime(2013, 02, 10), PayAmount = 2000.00m, Invest= 500},
-						new Payment {PaymentDate = new DateTime(2013, 03, 10), PayAmount = 2000.00m, Invest= 500}
+						new Payment {PaymentDate = new DateTime(2013, 01, 10), PayAmount = 2200.00m, InvestGrn = 4000m, Rate = 8},
+						new Payment {PaymentDate = new DateTime(2013, 02, 10), PayAmount = 2200.00m, InvestGrn = 4000m, Rate = 8},
+						new Payment {PaymentDate = new DateTime(2013, 03, 10), PayAmount = 2200.00m, InvestGrn = 4000m, Rate = 8}
 
 					};
 
@@ -130,33 +130,47 @@ namespace LoanKeeper.Test
 			bool todayPrined = false;
 			decimal totalInterest = 0;
 			decimal totalPaid = 0;
+			decimal totalInvest = 0;
+			decimal totalInvestGrn = 0;
 
 			foreach (var m in monthPayments)
 			{
 				decimal body = prev != null ? m.Paid - prev.Interest : 0;
 				decimal interest = prev != null ? prev.Interest : 0;
-				decimal debt = prev != null ? m.Debt - m.Paid + prev.Interest : 41500;
+				decimal debt = m.Debt - body;
 
 				if (m.Date > DateTime.Today && todayPrined == false)
 				{
 					Trace.WriteLine("");
 					Trace.WriteLine("For today:");
 					Trace.WriteLine("----------");
-					Trace.WriteLine(string.Format("Total paid:\t\t{0,12:0.00}\nTotal body:\t\t{1,12:0.00}\nTotal interest:\t{2,12:0.00}", totalPaid, totalPaid - totalInterest, totalInterest));
+
+					Trace.WriteLine(string.Format(
+						"Total paid:\t\t{0,12:0.00}\nTotal body:\t\t{1,12:0.00}\nTotal interest:\t{2,12:0.00}\nTotal invest:\t{3,12:0.00} usd = {4:0.00} uah",
+						totalPaid, totalPaid - totalInterest, totalInterest, totalInvest, totalInvestGrn));
 					Trace.WriteLine("");
 					todayPrined = true;
 				}
 
 				totalInterest += interest;
 				totalPaid += m.Paid;
+				totalInvest += m.Invest;
+				totalInvestGrn += m.InvestGrn;
+
+				string investStr = m.Invest > 0 ? string.Format("invest: {0:0.00} usd, {1:0.00} uah", m.Invest, m.InvestGrn) : "";
 
 				Trace.WriteLine(
 					string.Format(
-						"{0,15:MMMM yyyy} {1,12:0.00} {2,9:0.00} {3,9:0.00} {4,9:0.00} {5}",
-						m.Date, debt, interest, body, m.Paid, m.InvalidCalculation ? "+" : ""));
+						"{0,15:MMMM yyyy} {1,12:0.00} {2,9:0.00} {3,9:0.00} {4,9:0.00} {5} {6}",
+						m.Date, debt, interest, body, m.Paid, m.InvalidCalculation ? "+" : "",investStr));
 
 				prev = m;
 			}
+
+			Trace.WriteLine("");
+			Trace.WriteLine(string.Format(
+						"Total paid:\t\t{0,12:0.00}\nTotal body:\t\t{1,12:0.00}\nTotal interest:\t{2,12:0.00}\nTotal invest:\t{3,12:0.00} usd = {4:0.00} uah",
+						totalPaid, totalPaid - totalInterest, totalInterest, totalInvest, totalInvestGrn));
 		}
 	}
 }

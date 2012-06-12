@@ -323,7 +323,7 @@ namespace LoanKeeper.Core
 
 				while (i < payments.Length && payments[i].PaymentDate < nextMonth)
 				{
-					if (payments[i].Interest != null && prevM != null && Math.Abs(payments[i].Interest.Value - prevM.Interest)>0.01m && prevM.InvalidCalculation == false)
+					if (payments[i].Interest != null && prevM != null && Math.Abs(payments[i].Interest.Value - prevM.Interest) > 0.01m && prevM.InvalidCalculation == false)
 						prevM.InvalidCalculation = true;
 
 					paymentsList.Add(payments[i].Clone());
@@ -331,6 +331,9 @@ namespace LoanKeeper.Core
 					DateTime beginDate = j == 0 ? firstDay : payments[i - 1].PaymentDateWithShift;
 
 					m.Interest += debt * interestPerHour * (decimal)(payments[i].PaymentDateWithShift - beginDate).TotalHours;
+					m.Invest += payments[i].Invest;
+					m.InvestGrn += payments[i].InvestGrn;
+
 					decimal payAmount = payments[i].PayAmount + payments[i].Invest;
 					if (payAmount >= prevInterest)
 					{
