@@ -107,20 +107,21 @@ namespace LoanKeeper.Test
 						new Payment {PaymentDate = new DateTime(2012, 04, 05), Interest = 214.02m, Body = 85.98m},
 						new Payment {PaymentDate = new DateTime(2012, 04, 18),		PayAmount = 700.00m},
 						new Payment {PaymentDate = new DateTime(2012, 05, 04), Interest = 194.01m, Body = 105.99m},
-						new Payment {PaymentDate = new DateTime(2012, 05, 07),		PayAmount = 2000.00m},
-						new Payment {PaymentDate = new DateTime(2012, 06, 08), Interest = 177.33m, Body = 330.77m, InvestGrn = 5000m, Rate = 8.105m},
+						new Payment {PaymentDate = new DateTime(2012, 05, 07),		PayAmount = 2000.00m}, //22974.17 - 22724.97 = 249.2
+						new Payment {PaymentDate = new DateTime(2012, 06, 08), Interest = 177.33m, Body = 330.77m, InvestGrn = 5000m, Rate = 8.105m},//22834.69 - 22648.22 = 186.47
 
-						new Payment {PaymentDate = new DateTime(2012, 07, 10), PayAmount = 2200.00m, InvestGrn = 0000m, Rate = 8},
-						new Payment {PaymentDate = new DateTime(2012, 08, 10), PayAmount = 2200.00m, InvestGrn = 3000m, Rate = 8},
-						new Payment {PaymentDate = new DateTime(2012, 09, 10), PayAmount = 2200.00m, InvestGrn = 3500m, Rate = 8},
+						new Payment {PaymentDate = new DateTime(2012, 07, 03), Interest = 159.71m, Body = 840.29m},
+						new Payment {PaymentDate = new DateTime(2012, 07, 11),		PayAmount = 2108.48m, InvestGrn = 5000m, Rate = 8.11m},
+
+						new Payment {PaymentDate = new DateTime(2012, 08, 10), PayAmount = 1800.00m, InvestGrn = 5000m, Rate = 8},
+						new Payment {PaymentDate = new DateTime(2012, 09, 10), PayAmount = 1800.00m, InvestGrn = 5000m, Rate = 8},
+						new Payment {PaymentDate = new DateTime(2012, 10, 10), PayAmount = 1800.00m, InvestGrn = 5000m, Rate = 8},
+						new Payment {PaymentDate = new DateTime(2012, 11, 10), PayAmount = 1800.00m, InvestGrn = 5000m, Rate = 8},
+						new Payment {PaymentDate = new DateTime(2012, 12, 10), PayAmount = 1800.00m, InvestGrn = 5000m, Rate = 8},
 						
-						new Payment {PaymentDate = new DateTime(2012, 10, 10), PayAmount = 2200.00m, InvestGrn = 4000m, Rate = 8},
-						new Payment {PaymentDate = new DateTime(2012, 11, 10), PayAmount = 2200.00m, InvestGrn = 4000m, Rate = 8},
-						new Payment {PaymentDate = new DateTime(2012, 12, 10), PayAmount = 2200.00m, InvestGrn = 4000m, Rate = 8},
-						
-						new Payment {PaymentDate = new DateTime(2013, 01, 10), PayAmount = 2200.00m, InvestGrn = 4000m, Rate = 8},
-						new Payment {PaymentDate = new DateTime(2013, 02, 10), PayAmount = 2200.00m, InvestGrn = 4000m, Rate = 8},
-						new Payment {PaymentDate = new DateTime(2013, 03, 10), PayAmount = 2200.00m, InvestGrn = 4000m, Rate = 8}
+						new Payment {PaymentDate = new DateTime(2013, 01, 10), PayAmount = 1800.00m, InvestGrn = 5000m, Rate = 8},
+						new Payment {PaymentDate = new DateTime(2013, 02, 10), PayAmount = 1800.00m, InvestGrn = 5000m, Rate = 8},
+						new Payment {PaymentDate = new DateTime(2013, 03, 10), PayAmount = 1800.00m, InvestGrn = 5000m, Rate = 8}
 
 					};
 
