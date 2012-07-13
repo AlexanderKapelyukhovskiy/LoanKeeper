@@ -16,6 +16,14 @@ namespace LoanKeeper.Test
 		}
 
 		[Test]
+		public void CalculationWithPaymentsDetailsTest()
+		{
+			var collector = new LoanController();
+			MonthPayment[] monthPayments = collector.Calculate(LoanController.Payments, new DateTime(2007, 08, 28), 45100);
+			LoanController.PrintPayments(monthPayments, true);
+		}
+
+		[Test]
 		public void CalculationWitoutInvestTest()
 		{
 			var collector = new LoanController();

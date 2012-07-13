@@ -87,13 +87,13 @@ namespace LoanKeeper.Core
 							new Payment{PaymentDate = new DateTime(2012, 06, 08), Interest = 177.33m, Body = 330.77m, InvestGrn = 5000m, Rate = 8.105m}, //22834.69 - 22648.22 = 186.47
 
 							new Payment {PaymentDate = new DateTime(2012, 07, 03), Interest = 159.71m, Body = 840.29m},
-							new Payment {PaymentDate = new DateTime(2012, 07, 11), PayAmount = 2108.48m, InvestGrn = 5000m, Rate = 8.11m},
+							new Payment {PaymentDate = new DateTime(2012, 07, 13), PayAmount = 1808.00m, InvestGrn = 4000m, Rate = 8.13m},
 
-							new Payment {PaymentDate = new DateTime(2012, 08, 10), PayAmount = 2000.00m, InvestGrn = 5000m, Rate = 8},
-							new Payment {PaymentDate = new DateTime(2012, 09, 10), PayAmount = 2000.00m, InvestGrn = 5000m, Rate = 8},
-							new Payment {PaymentDate = new DateTime(2012, 10, 10), PayAmount = 2000.00m, InvestGrn = 5000m, Rate = 8},
-							new Payment {PaymentDate = new DateTime(2012, 11, 10), PayAmount = 2000.00m, InvestGrn = 5000m, Rate = 8},
-							new Payment {PaymentDate = new DateTime(2012, 12, 10), PayAmount = 2000.00m, InvestGrn = 5000m, Rate = 8},
+							new Payment {PaymentDate = new DateTime(2012, 08, 10), PayAmount = 2000.00m, InvestGrn = 4000m, Rate = 8},
+							new Payment {PaymentDate = new DateTime(2012, 09, 10), PayAmount = 2000.00m, InvestGrn = 4000m, Rate = 8},
+							new Payment {PaymentDate = new DateTime(2012, 10, 10), PayAmount = 2000.00m, InvestGrn = 4000m, Rate = 8},
+							new Payment {PaymentDate = new DateTime(2012, 11, 10), PayAmount = 2000.00m, InvestGrn = 4000m, Rate = 8},
+							new Payment {PaymentDate = new DateTime(2012, 12, 10), PayAmount = 2000.00m, InvestGrn = 4000m, Rate = 8},
 
 							new Payment {PaymentDate = new DateTime(2013, 01, 10), PayAmount = 1800.00m, InvestGrn = 5000m, Rate = 8},
 							new Payment {PaymentDate = new DateTime(2013, 02, 10), PayAmount = 1800.00m, InvestGrn = 5000m, Rate = 8},
@@ -455,7 +455,7 @@ namespace LoanKeeper.Core
 			return list.ToArray();
 		}
 
-		public static void PrintPayments(IEnumerable<MonthPayment> monthPayments)
+		public static void PrintPayments(IEnumerable<MonthPayment> monthPayments, bool withPaymentsDetails = false)
 		{
 			MonthPayment prev = null;
 			bool todayPrined = false;
@@ -464,6 +464,8 @@ namespace LoanKeeper.Core
 			decimal totalInvest = 0;
 			decimal totalInvestGrn = 0;
 
+			int mI = 1;
+			int pI = 1;
 			foreach (var m in monthPayments)
 			{
 				decimal body = prev != null ? m.Paid - prev.Interest : 0;
@@ -492,9 +494,17 @@ namespace LoanKeeper.Core
 
 				Trace.WriteLine(
 					string.Format(
-						"{0,15:MMMM yyyy} {1,12:0.00} {2,9:0.00} {3,9:0.00} {4,9:0.00} {5} {6}",
-						m.Date, debt, interest, body, m.Paid, m.InvalidCalculation ? "+" : "", investStr));
+						"{0} {1,15:MMMM yyyy} {2,12:0.00} {3,9:0.00} {4,9:0.00} {5,9:0.00} {6} {7}",
+						mI++, m.Date, debt, interest, body, m.Paid, m.InvalidCalculation ? "+" : "", investStr));
 
+				if (withPaymentsDetails && m.Payments != null)
+				{
+					foreach (var p in m.Payments)
+					{
+						Trace.WriteLine(string.Format("\t\t\t\t\t\t\t{0} {1,15:dd/MM/yyyy} {2,12:0.00} {3}", pI++, p.PaymentDate, p.PayAmount, PrintInvest(p)));
+					}
+				}
+				
 				prev = m;
 			}
 
@@ -502,7 +512,14 @@ namespace LoanKeeper.Core
 			Trace.WriteLine(string.Format(
 				"Total paid:\t\t{0,12:0.00}\nTotal body:\t\t{1,12:0.00}\nTotal interest:\t{2,12:0.00}\nTotal invest:\t{3,12:0.00} usd = {4:0.00} uah",
 				totalPaid, totalPaid - totalInterest, totalInterest, totalInvest, totalInvestGrn));
+				
 		}
+
+		private static string PrintInvest(Payment p)
+		{
+			return p.Invest > 0 ? string.Format("+ {0:0.00} = {1:0.00}", p.Invest, p.Invest + p.PayAmount) : "";
+		}
+
 
 		private static void VarifyInterest(decimal interest, Payment payment)
 		{
