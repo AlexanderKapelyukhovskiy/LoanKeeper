@@ -55,7 +55,7 @@ namespace LoanKeeper.Core
 							new Payment {PaymentDate = new DateTime(2010, 09, 01), Interest = 380.51m, Body = 619.49m},
 							new Payment {PaymentDate = new DateTime(2010, 10, 01), Interest = 361.26m, Body = 638.74m},
 							new Payment {PaymentDate = new DateTime(2010, 11, 01), Interest = 366.32m, Body = 633.68m},
-							new Payment {PaymentDate = new DateTime(2010, 12, 10), PayAmount = 400},
+							new Payment {PaymentDate = new DateTime(2010, 12, 10), Interest = 347.79m, Body = 52.21m},
 							new Payment {PaymentDate = new DateTime(2011, 01, 10), Interest = 358.98m, Body = 141.02m},
 							new Payment {PaymentDate = new DateTime(2011, 02, 10), Interest = 357.72m, Body = 42.28m},
 							new Payment {PaymentDate = new DateTime(2011, 02, 11), PayAmount = 600.00m, HoursShift = -1},
@@ -91,7 +91,7 @@ namespace LoanKeeper.Core
 
 							new Payment {PaymentDate = new DateTime(2012, 08, 01), Interest = 138.60m, Body =661.4m, Rate = 8.13m},
 
-							//new Payment {PaymentDate = new DateTime(2012, 08, 14), PayAmount = 984.99m, InvestGrn = 5000m, Rate = 8.13m},
+							new Payment {PaymentDate = new DateTime(2012, 08, 14), PayAmount =1008m, InvestGrn = 4000m, Rate = 8.13m},
 
 							new Payment {PaymentDate = new DateTime(2012, 09, 10), PayAmount = 2000.00m, InvestGrn = 4000m, Rate = 8},
 							new Payment {PaymentDate = new DateTime(2012, 10, 10), PayAmount = 2000.00m, InvestGrn = 4000m, Rate = 8},
