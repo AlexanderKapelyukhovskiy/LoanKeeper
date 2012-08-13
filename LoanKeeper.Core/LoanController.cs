@@ -91,12 +91,12 @@ namespace LoanKeeper.Core
 
 							new Payment {PaymentDate = new DateTime(2012, 08, 01), Interest = 138.60m, Body =661.4m, Rate = 8.13m},
 
-							new Payment {PaymentDate = new DateTime(2012, 08, 14), PayAmount =1008m, InvestGrn = 4000m, Rate = 8.13m},
+							new Payment {PaymentDate = new DateTime(2012, 08, 13), PayAmount =814.78m, InvestGrn = 8000m, Rate = 8.12m},//Papa
 
 							new Payment {PaymentDate = new DateTime(2012, 09, 10), PayAmount = 2000.00m, InvestGrn = 4000m, Rate = 8},
 							new Payment {PaymentDate = new DateTime(2012, 10, 10), PayAmount = 2000.00m, InvestGrn = 4000m, Rate = 8},
 							new Payment {PaymentDate = new DateTime(2012, 11, 10), PayAmount = 2000.00m, InvestGrn = 4000m, Rate = 8},
-							new Payment {PaymentDate = new DateTime(2012, 12, 10), PayAmount = 2000.00m, InvestGrn = 2084.70m, Rate = 8},
+							new Payment {PaymentDate = new DateTime(2012, 12, 10), PayAmount = 2000.00m, InvestGrn = 4084.70m, Rate = 8},
 
 							new Payment {PaymentDate = new DateTime(2013, 01, 10), PayAmount = 1800.00m, InvestGrn = 5000m, Rate = 8},
 							new Payment {PaymentDate = new DateTime(2013, 02, 10), PayAmount = 1800.00m, InvestGrn = 5000m, Rate = 8},
