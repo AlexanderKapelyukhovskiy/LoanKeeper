@@ -13,5 +13,6 @@ namespace LoanKeeper.Core
 		public Payment[] Payments { get; set; }
 
 		public bool InvalidCalculation { get; set; }
+		public decimal Difference { get; set; }
 	}
 }

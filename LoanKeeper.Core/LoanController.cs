@@ -89,20 +89,23 @@ namespace LoanKeeper.Core
 							new Payment {PaymentDate = new DateTime(2012, 07, 03), Interest = 159.71m, Body = 840.29m},
 							new Payment {PaymentDate = new DateTime(2012, 07, 13), PayAmount = 1808.00m, InvestGrn = 4000m, Rate = 8.13m},
 
-							new Payment {PaymentDate = new DateTime(2012, 08, 01), Interest = 138.60m, Body =661.4m, Rate = 8.13m},
-
+							new Payment {PaymentDate = new DateTime(2012, 08, 01), Interest = 138.60m, Body = 661.4m, Rate = 8.13m, HoursShift = -1},
 							new Payment {PaymentDate = new DateTime(2012, 08, 13), PayAmount = 814.78m, InvestGrn = 8000m, Rate = 8.12m},//Papa
 
-							new Payment {PaymentDate = new DateTime(2012, 09, 10), Interest = 108.97m, Body =41.03m, Rate = 8.159m},
-							new Payment {PaymentDate = new DateTime(2012, 09, 19), PayAmount = 350.00m, Rate = 8.159m},
+							new Payment {PaymentDate = new DateTime(2012, 09, 10), Interest = 108.97m, Body = 41.03m, InvestGrn = -9000m, Rate = 8.159m},//Repay loan for Lena DateTime(2012, 09, 13)
+							new Payment {PaymentDate = new DateTime(2012, 09, 19), PayAmount = 350.00m, Rate = 8.159m, HoursShift = 2},
 
-							new Payment {PaymentDate = new DateTime(2012, 10, 10), PayAmount = 600.00m, InvestGrn = 0000m, Rate = 8},
-							new Payment {PaymentDate = new DateTime(2012, 11, 10), PayAmount = 1500.00m, InvestGrn = 0000m, Rate = 8},
-							new Payment {PaymentDate = new DateTime(2012, 12, 10), PayAmount = 1500.00m, InvestGrn = 0000m, Rate = 8},
+							new Payment {PaymentDate = new DateTime(2012, 10, 09), Interest = 96.31m, Body = 3.69m, Rate = 8.164m},
+							new Payment {PaymentDate = new DateTime(2012, 10, 12), PayAmount = 700.00m, InvestGrn = -8000m, Rate = 8.16m},
 
-							new Payment {PaymentDate = new DateTime(2013, 01, 10), PayAmount = 1500.00m, InvestGrn = 0000m, Rate = 8},
-							new Payment {PaymentDate = new DateTime(2013, 02, 10), PayAmount = 1500.00m, InvestGrn = 0000m, Rate = 8},
-							new Payment {PaymentDate = new DateTime(2013, 03, 10), PayAmount = 1500.00m, InvestGrn = 0000m, Rate = 8}
+							new Payment {PaymentDate = new DateTime(2012, 11, 14), PayAmount = 1700.00m, Rate = 8},
+							new Payment {PaymentDate = new DateTime(2012, 12, 14), PayAmount = 1700.00m, Rate = 8},
+
+							new Payment {PaymentDate = new DateTime(2013, 01, 14), PayAmount = 1700.00m, Rate = 8},
+							new Payment {PaymentDate = new DateTime(2013, 02, 14), PayAmount = 1700.00m, Rate = 8},
+							new Payment {PaymentDate = new DateTime(2013, 03, 14), PayAmount = 1700.00m, Rate = 8},
+							new Payment {PaymentDate = new DateTime(2013, 04, 14), PayAmount = 1700.00m, Rate = 8},
+							new Payment {PaymentDate = new DateTime(2013, 05, 14), PayAmount = 1700.00m, Rate = 8}
 						};
 			}
 		}
@@ -412,7 +415,6 @@ namespace LoanKeeper.Core
 
 				if (payments[i].PaymentDate > nextMonth)
 				{
-					
 					m.Interest = debt*interestPerHour*(decimal)(nextMonth - firstDay).TotalHours;
 					firstDay = nextMonth;
 					prevM = m;
@@ -426,7 +428,9 @@ namespace LoanKeeper.Core
 				decimal invetstMultyplier = withInvest ? 1 : 0;
 				while (i < payments.Length && payments[i].PaymentDate < nextMonth)
 				{
-					if (payments[i].Interest != null && prevM != null && Math.Abs(payments[i].Interest.Value - prevM.Interest) > 0.01m && prevM.InvalidCalculation == false)
+					if (payments[i].Interest != null && prevM != null 
+						&& Math.Abs(prevM.Difference = (payments[i].Interest.Value - prevM.Interest)) > 0.006m 
+						&& prevM.InvalidCalculation == false)
 						prevM.InvalidCalculation = true;
 
 					paymentsList.Add(payments[i].Clone());
@@ -438,7 +442,9 @@ namespace LoanKeeper.Core
 					m.Invest += payments[i].Invest * invetstMultyplier;
 					m.InvestGrn += payments[i].InvestGrn * invetstMultyplier;
 
-					decimal payAmount = payments[i].PayAmount + payments[i].Invest * (invetstMultyplier);
+					decimal invest = payments[i].Invest * (invetstMultyplier);
+
+					decimal payAmount = payments[i].PayAmount + (invest > 0 ? invest : 0);
 					if (payAmount >= prevInterest)
 					{
 						debt -= (payAmount - prevInterest);
@@ -496,11 +502,11 @@ namespace LoanKeeper.Core
 				totalInvest += m.Invest;
 				totalInvestGrn += m.InvestGrn;
 
-				string investStr = m.Invest > 0 ? string.Format("invest: {0:0.00} usd, {1:0.00} uah", m.Invest, m.InvestGrn) : "";
+				string investStr = m.Invest != 0 ? string.Format("invest: {0:0.00} usd, {1:0.00} uah", m.Invest, m.InvestGrn) : "";
 
 				Trace.WriteLine(
 					string.Format(
-						"{0} {1,15:MMMM yyyy} {2,12:0.00} {3,9:0.00} {4,9:0.00} {5,9:0.00} {6} {7}",
+						"{0,2} {1,15:MMMM yyyy} {2,12:0.00} {3,9:0.00} {4,9:0.00} {5,9:0.00} {6} {7}",
 						mI++, m.Date, debt, interest, body, m.Paid, m.InvalidCalculation ? "+" : "", investStr));
 
 				if (withPaymentsDetails && m.Payments != null)

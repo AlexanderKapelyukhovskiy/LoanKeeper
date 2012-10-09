@@ -40,6 +40,8 @@ namespace LoanKeeper.Core
 			set { _payAmount = value; }
 		}
 
+		public bool DebtReturn { get; set; }
+
 		public DateTime PaymentDateWithShift
 		{
 			get
