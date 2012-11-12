@@ -96,14 +96,19 @@ namespace LoanKeeper.Core
 							new Payment {PaymentDate = new DateTime(2012, 09, 19), PayAmount = 350.00m, Rate = 8.159m, HoursShift = 2},
 
 							new Payment {PaymentDate = new DateTime(2012, 10, 09), Interest = 96.31m, Body = 3.69m, Rate = 8.164m},
-							new Payment {PaymentDate = new DateTime(2012, 10, 12), PayAmount = 700.00m, InvestGrn = -8000m, Rate = 8.16m},
+							new Payment {PaymentDate = new DateTime(2012, 10, 11), PayAmount = 600.00m, InvestGrn = -8000m, Rate = 8.164m, HoursShift = -1},
 
-							new Payment {PaymentDate = new DateTime(2012, 11, 14), PayAmount = 1700.00m, Rate = 8},
-							new Payment {PaymentDate = new DateTime(2012, 12, 14), PayAmount = 1700.00m, Rate = 8},
+							new Payment {PaymentDate = new DateTime(2012, 11, 08), Interest = 92.60m, Body = 0, InvestGrn = 8268.74m, Rate = 8.208m},
+
+							new Payment {PaymentDate = new DateTime(2012, 11, 12), PayAmount = 1389.08m, InvestGrn = 1731.26m, Rate = 8.208m},
+							
+							new Payment {PaymentDate = new DateTime(2012, 12, 10), PayAmount = 100.00m, Rate = 8},
+							new Payment {PaymentDate = new DateTime(2012, 12, 12), PayAmount = 1600.00m, Rate = 8},
 
 							new Payment {PaymentDate = new DateTime(2013, 01, 14), PayAmount = 1700.00m, Rate = 8},
 							new Payment {PaymentDate = new DateTime(2013, 02, 14), PayAmount = 1700.00m, Rate = 8},
 							new Payment {PaymentDate = new DateTime(2013, 03, 14), PayAmount = 1700.00m, Rate = 8},
+
 							new Payment {PaymentDate = new DateTime(2013, 04, 14), PayAmount = 1700.00m, Rate = 8},
 							new Payment {PaymentDate = new DateTime(2013, 05, 14), PayAmount = 1700.00m, Rate = 8}
 						};
@@ -391,10 +396,19 @@ namespace LoanKeeper.Core
 		}
 
 		
-
+		/// <summary>
+		/// Calculate mothly payments
+		/// </summary>
+		/// <param name="payments">payments array</param>
+		/// <param name="startDate">first payment date</param>
+		/// <param name="debtAmount">debt amount</param>
+		/// <param name="withInvest">true - use ivestments during calculation, false - calculate without investments</param>
+		/// <returns></returns>
 		public MonthPayment[] Calculate(Payment[] payments, DateTime startDate, decimal debtAmount, bool withInvest = true)
 		{
 			var firstDay = startDate;
+
+			
 
 			const decimal interestPerHour = 12.7m / (24 * 360 * 100);
 
@@ -410,7 +424,6 @@ namespace LoanKeeper.Core
 				list.Add(m);
 				m.Debt = debt;
 				m.Date = firstDay;
-
 				DateTime nextMonth = new DateTime(firstDay.Year, firstDay.Month, 1).AddMonths(1);
 
 				if (payments[i].PaymentDate > nextMonth)
@@ -463,6 +476,7 @@ namespace LoanKeeper.Core
 				m.Interest += debt * interestPerHour * (decimal)(nextMonth - payments[i - 1].PaymentDateWithShift).TotalHours;
 				firstDay = nextMonth;
 				prevM = m;
+
 			}
 			return list.ToArray();
 		}
