@@ -102,12 +102,12 @@ namespace LoanKeeper.Core
 
 							new Payment {PaymentDate = new DateTime(2012, 11, 12), PayAmount = 1389.08m, InvestGrn = 1731.26m, Rate = 8.208m},
 							
-							new Payment {PaymentDate = new DateTime(2012, 12, 10), PayAmount = 100.00m, Rate = 8},
-							new Payment {PaymentDate = new DateTime(2012, 12, 12), PayAmount = 1600.00m, Rate = 8},
+							new Payment {PaymentDate = new DateTime(2012, 12, 06), Interest = 68.66m, Body = 31.34m, Rate = 8.23m},
+							new Payment {PaymentDate = new DateTime(2012, 12, 12), PayAmount = 1700.00m, Rate = 8.20m},
 
-							new Payment {PaymentDate = new DateTime(2013, 01, 14), PayAmount = 1700.00m, Rate = 8},
-							new Payment {PaymentDate = new DateTime(2013, 02, 14), PayAmount = 1700.00m, Rate = 8},
-							new Payment {PaymentDate = new DateTime(2013, 03, 14), PayAmount = 1700.00m, Rate = 8},
+							new Payment {PaymentDate = new DateTime(2013, 01, 14), PayAmount = 1800.00m, Rate = 8.20m},
+							new Payment {PaymentDate = new DateTime(2013, 02, 14), PayAmount = 1800.00m, Rate = 8.20m},
+							new Payment {PaymentDate = new DateTime(2013, 03, 14), PayAmount = 1800.00m, Rate = 8.20m},
 
 							new Payment {PaymentDate = new DateTime(2013, 04, 14), PayAmount = 1700.00m, Rate = 8},
 							new Payment {PaymentDate = new DateTime(2013, 05, 14), PayAmount = 1700.00m, Rate = 8}
