@@ -99,15 +99,19 @@ namespace LoanKeeper.Core
 							new Payment {PaymentDate = new DateTime(2012, 10, 11), PayAmount = 600.00m, InvestGrn = -8000m, Rate = 8.164m, HoursShift = -1},
 
 							new Payment {PaymentDate = new DateTime(2012, 11, 08), Interest = 92.60m, Body = 0, InvestGrn = 8268.74m, Rate = 8.208m},
-
 							new Payment {PaymentDate = new DateTime(2012, 11, 12), PayAmount = 1389.08m, InvestGrn = 1731.26m, Rate = 8.208m},
 							
 							new Payment {PaymentDate = new DateTime(2012, 12, 06), Interest = 68.66m, Body = 31.34m, Rate = 8.23m},
 							new Payment {PaymentDate = new DateTime(2012, 12, 07), PayAmount = 1700.00m, Rate = 8.23m},
 
-							new Payment {PaymentDate = new DateTime(2013, 01, 14), PayAmount = 1800.00m, Rate = 8.20m},
-							new Payment {PaymentDate = new DateTime(2013, 02, 14), PayAmount = 1800.00m, Rate = 8.20m},
-							new Payment {PaymentDate = new DateTime(2013, 03, 14), PayAmount = 1800.00m, Rate = 8.20m},
+							new Payment {PaymentDate = new DateTime(2013, 01, 10), Interest = 46.68m, Body = 53.32m, Rate = 8.159m},
+							new Payment {PaymentDate = new DateTime(2013, 01, 11), PayAmount = 1700.00m, Rate = 8.163m},
+
+							new Payment {PaymentDate = new DateTime(2013, 02, 08), PayAmount = 100.00m, Rate = 8.20m},
+							new Payment {PaymentDate = new DateTime(2013, 02, 14), PayAmount = 1700.00m, Rate = 8.20m},
+
+							new Payment {PaymentDate = new DateTime(2013, 03, 04), PayAmount = 100.00m, Rate = 8.20m},
+							new Payment {PaymentDate = new DateTime(2013, 03, 14), PayAmount = 350.00m,  InvestGrn = -10000m, Rate = 8.20m},
 
 							new Payment {PaymentDate = new DateTime(2013, 04, 14), PayAmount = 1700.00m, Rate = 8},
 							new Payment {PaymentDate = new DateTime(2013, 05, 14), PayAmount = 1700.00m, Rate = 8}
